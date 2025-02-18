@@ -7,7 +7,11 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    //registration
+    /**
+     * Summary of register
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
     public function register(Request $request)
     {
         $request->validate([

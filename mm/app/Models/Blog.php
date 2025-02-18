@@ -19,8 +19,11 @@ class Blog extends Model
         return $this->belongsTo(User::class);
     }
 
+
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class)
+                    ->with(['user:id,username', 'replies'])
+                    ->whereNull('parent_id');
     }
 }

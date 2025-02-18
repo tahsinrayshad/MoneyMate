@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,4 +47,37 @@ Route::group([
 
     Route::post('signup', [UserController::class, 'register']);
 
+});
+
+
+
+
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'blog'
+
+], function ($router) {
+
+    Route::post('create', [BlogController::class, 'create']);
+    Route::post('update', [BlogController::class, 'edit']);
+    Route::post('delete', [BlogController::class, 'delete']);
+    Route::get('all', [BlogController::class, 'getAll']);
+    Route::get('single/{id}', [BlogController::class, 'getSingleBlog']);
+});
+
+
+
+
+
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'comment'
+
+], function ($router) {
+
+    Route::post('create', [CommentController::class, 'create']);
+    Route::post('update', [CommentController::class, 'edit']);
+    Route::post('delete', [CommentController::class, 'delete']);
 });
