@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('budgets', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->string('title');
+            $table->decimal('amount', 15, 2);
+            $table->text('description')->nullable();
+            $table->date('start_date');
+            $table->date('end_date');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            
         });
     }
 
