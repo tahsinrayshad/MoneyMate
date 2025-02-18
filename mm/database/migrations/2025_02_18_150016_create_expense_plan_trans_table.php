@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('expense_plan_trans', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('expense_plan_id');
+            $table->unsignedBigInteger('transaction_id');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('expense_plan_id')->references('id')->on('expense_plans')->onDelete('cascade');
+            $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
         });
     }
 
