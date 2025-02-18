@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\TransactionTagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,4 +81,19 @@ Route::group([
     Route::post('create', [CommentController::class, 'create']);
     Route::post('update', [CommentController::class, 'edit']);
     Route::post('delete', [CommentController::class, 'delete']);
+});
+
+
+
+
+
+
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'tags'
+
+], function ($router) {
+
+    Route::get('all', [TransactionTagController::class, 'getAll']);
 });
