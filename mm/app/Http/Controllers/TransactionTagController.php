@@ -11,8 +11,8 @@ class TransactionTagController extends Controller
     public function getAll()
     {
         $transactionTags = TransactionTag::all();
-        return response()->json([
+        return response()->json(
             $transactionTags
-        ], 200);
+        , 200);
     }
 }
