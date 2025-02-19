@@ -9,6 +9,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\TransactionTagController;
 use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\ExpensePlanConroller;
 
 /*
 |--------------------------------------------------------------------------
@@ -116,4 +117,21 @@ Route::group([
 
     Route::get('all', [BudgetController::class, 'getAllOfAUser']);
     Route::get('single/{id}', [BudgetController::class, 'getSingleBudget']);
+});
+
+
+
+
+
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'plans'
+
+], function ($router) {
+
+    Route::post('create', [ExpensePlanConroller::class, 'create']);
+    Route::post('update', [ExpensePlanConroller::class, 'edit']);
+    Route::post('delete', [ExpensePlanConroller::class, 'delete']);
+    Route::get('', [ExpensePlanConroller::class, 'getExpensePlan']);
 });
