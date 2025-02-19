@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\TransactionTagController;
+use App\Http\Controllers\BudgetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,4 +97,23 @@ Route::group([
 ], function ($router) {
 
     Route::get('all', [TransactionTagController::class, 'getAll']);
+});
+
+
+
+
+
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'budgets'
+
+], function ($router) {
+
+    Route::post('create', [BudgetController::class, 'create']);
+    Route::post('update', [BudgetController::class, 'edit']);
+    Route::post('delete', [BudgetController::class, 'delete']);
+
+    Route::get('all', [BudgetController::class, 'getAllOfAUser']);
+    Route::get('single/{id}', [BudgetController::class, 'getSingleBudget']);
 });
