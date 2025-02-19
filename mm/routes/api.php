@@ -11,6 +11,7 @@ use App\Http\Controllers\TransactionTagController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ExpensePlanConroller;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\ExpensePlanTransController;
 
 /*
 |--------------------------------------------------------------------------
@@ -140,8 +141,6 @@ Route::group([
 
 
 
-
-
 Route::group([
 
     'middleware' => 'api',
@@ -154,4 +153,17 @@ Route::group([
     Route::post('delete', [TransactionController::class, 'delete']);
     Route::get('all', [TransactionController::class, 'getAll']);
     Route::get('single/{id}', [TransactionController::class, 'getSingleTransaction']);
+});
+
+
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'transactions/plans'
+
+], function ($router) {
+
+    Route::post('create', [ExpensePlanTransController::class, 'create']);
+    Route::post('delete', [ExpensePlanTransController::class, 'delete']);
+    Route::post('update', [ExpensePlanTransController::class, 'edit']);
 });
