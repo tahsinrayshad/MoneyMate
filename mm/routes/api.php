@@ -10,6 +10,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\TransactionTagController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ExpensePlanConroller;
+use App\Http\Controllers\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -134,4 +135,23 @@ Route::group([
     Route::post('update', [ExpensePlanConroller::class, 'edit']);
     Route::post('delete', [ExpensePlanConroller::class, 'delete']);
     Route::get('', [ExpensePlanConroller::class, 'getExpensePlan']);
+});
+
+
+
+
+
+
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'transactions'
+
+], function ($router) {
+
+    Route::post('create', [TransactionController::class, 'create']);
+    // Route::post('update', [TransactionController::class, 'edit']);
+    Route::post('delete', [TransactionController::class, 'delete']);
+    Route::get('all', [TransactionController::class, 'getAll']);
+    Route::get('single/{id}', [TransactionController::class, 'getSingleTransaction']);
 });
