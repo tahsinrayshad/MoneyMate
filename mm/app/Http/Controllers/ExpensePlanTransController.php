@@ -90,6 +90,12 @@ class ExpensePlanTransController extends Controller
         ], 200);
     }
 
+
+    /**
+     * Summary of edit
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse     * 
+     */
     public function edit(Request $request)
     {
         $request->validate([
@@ -140,6 +146,53 @@ class ExpensePlanTransController extends Controller
             'data' => $expense,
             'transaction' => $transaction,
             'expense_plan' => $expense_plan
+        ], 200);
+    }
+
+
+    /**
+     * Summary of getAll
+     * @return mixed|\Illuminate\Http\JsonResponse     * 
+     */
+    public function getAll()
+    {
+        $user_id = auth()->user()->id;
+
+        $expenses = ExpensePlanTrans::where('user_id', $user_id)->get();
+
+        if (!$expenses) {
+            return response()->json([
+                'message' => 'No expense plan transactions found!',
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Successfully fetched all expense plan transactions!',
+            'data' => $expenses,
+        ], 200);
+    }
+
+
+    /**
+     * Summary of getSingleExpensePlanTrans
+     * @param mixed $id 
+     * @return mixed|\Illuminate\Http\JsonResponse     * 
+     */
+    public function getSingleExpensePlanTrans($id)
+    {
+        $user_id = auth()->user()->id;
+
+        $expense = ExpensePlanTrans::where('user_id', $user_id)->where('id', $id)->first();
+
+        if (!$expense) {
+            return response()->json([
+                'message' => 'Expense plan transaction not found!',
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Successfully fetched expense plan transaction!',
+            'data' => $expense,
         ], 200);
     }
 }

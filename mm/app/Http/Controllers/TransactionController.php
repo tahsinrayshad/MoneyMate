@@ -154,4 +154,78 @@ class TransactionController extends Controller
             'transaction' => $transaction,
         ], 200);
     }
+
+    /**
+     * Summary of getTransactionsByDay
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse 
+     */
+    public function getTransactionsByDay(Request $request)
+    {
+        $request->validate([
+            'date' => 'required|date_format:Y-m-d',
+        ]);
+
+        $user_id = auth()->user()->id;
+        $date = $request->date;
+
+        $transactions = Transaction::where('user_id', $user_id)
+            ->whereDate('created_at', $date)
+            ->get();
+
+        return response()->json([
+            'transactions' => $transactions,
+        ], 200);
+    }
+
+    /**
+     * Summary of getTransactionsByMonth
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+
+    public function getTransactionsByMonth(Request $request)
+    {
+        $request->validate([
+            'month' => 'required|date_format:Y-m',
+        ]);
+
+        $user_id = auth()->user()->id;
+        $month = $request->month;
+
+        $transactions = Transaction::where('user_id', $user_id)
+            ->whereYear('created_at', '=', date('Y', strtotime($month)))
+            ->whereMonth('created_at', '=', date('m', strtotime($month)))
+            ->get();
+
+        return response()->json([
+            'transactions' => $transactions,
+        ], 200);
+    }
+
+    /**
+     * Summary of getTransactionsByYear
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+
+    public function getTransactionsByYear(Request $request)
+    {
+        $request->validate([
+            'year' => 'required|date_format:Y',
+        ]);
+
+        $user_id = auth()->user()->id;
+        $year = $request->year;
+
+        $transactions = Transaction::where('user_id', $user_id)
+            ->whereYear('created_at', '=', $year)
+            ->get();
+
+        return response()->json([
+            'transactions' => $transactions,
+        ], 200);
+    }
+
+
 }
