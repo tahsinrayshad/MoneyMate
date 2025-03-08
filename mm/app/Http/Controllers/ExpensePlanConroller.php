@@ -134,4 +134,26 @@ class ExpensePlanConroller extends Controller
             'expensePlans' => $expensePlans
         ], 200);
     }
+
+    /**
+     * Summary of getSingleExpensePlan
+     * @param mixed $id
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
+    public function getSingleExpensePlan($id)
+    {
+        $user_id = auth()->user()->id;
+
+        $expensePlan = ExpensePlan::where('user_id', $user_id)->where('id', $id)->first();
+
+        if (!$expensePlan) {
+            return response()->json([
+                'message' => 'Expense plan not found!'
+            ], 404);
+        }
+
+        return response()->json([
+            'expensePlan' => $expensePlan
+        ], 200);
+    }
 }

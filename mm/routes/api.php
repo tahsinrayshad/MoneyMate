@@ -137,6 +137,7 @@ Route::group([
     Route::post('update', [ExpensePlanConroller::class, 'edit']);
     Route::post('delete', [ExpensePlanConroller::class, 'delete']);
     Route::get('', [ExpensePlanConroller::class, 'getExpensePlan']);
+    Route::get('single/{id}', [ExpensePlanConroller::class, 'getSingleExpensePlan']);
 });
 
 
