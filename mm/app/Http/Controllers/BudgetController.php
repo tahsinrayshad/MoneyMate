@@ -160,7 +160,14 @@ class BudgetController extends Controller
     {
         $user_id = auth()->user()->id;
 
-        $budgets = Budget::where('user_id', $user_id)->get();
+        $budgets = Budget::where('user_id', $user_id)
+            ->withCount('transactions')
+            ->withSum('transactions', 'amount')
+            ->get()
+            ->map(function ($budget) {
+                $budget->remaining_balance = $budget->amount - $budget->transactions_sum_amount;
+                return $budget;
+            });
 
         return response()->json([
             'budgets' => $budgets
