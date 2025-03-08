@@ -160,15 +160,26 @@ class ExpensePlanTransController extends Controller
 
         $expenses = ExpensePlanTrans::where('user_id', $user_id)->get();
 
-        if (!$expenses) {
+        if ($expenses->isEmpty()) {
             return response()->json([
                 'message' => 'No expense plan transactions found!',
             ], 404);
         }
 
+        $data = $expenses->map(function ($expense) {
+            $expense_plan = ExpensePlan::select('id', 'title', 'amount')->find($expense->expense_plan_id);
+            $transaction = Transaction::select('id', 'description', 'amount', 'created_at')->find($expense->transaction_id);
+
+            return [
+                'expense' => $expense,
+                'expense_plan' => $expense_plan,
+                'transaction' => $transaction,
+            ];
+        });
+
         return response()->json([
             'message' => 'Successfully fetched all expense plan transactions!',
-            'data' => $expenses,
+            'data' => $data,
         ], 200);
     }
 
@@ -190,9 +201,14 @@ class ExpensePlanTransController extends Controller
             ], 404);
         }
 
+        $expense_plan = ExpensePlan::select('id', 'title', 'amount')->find($expense->expense_plan_id);
+        $transaction = Transaction::select('id', 'description', 'amount', 'transaction_tag_id', 'created_at')->find($expense->transaction_id);
+
         return response()->json([
             'message' => 'Successfully fetched expense plan transaction!',
             'data' => $expense,
+            'expense_plan' => $expense_plan,
+            'transaction' => $transaction,
         ], 200);
     }
 }
