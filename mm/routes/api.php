@@ -158,6 +158,7 @@ Route::group([
     Route::post(uri: 'bydate', action: [TransactionController::class, 'getTransactionsByDay']);
     Route::post(uri: 'bymonth', action: [TransactionController::class, 'getTransactionsByMonth']);
     Route::post(uri: 'byyear', action: [TransactionController::class, 'getTransactionsByYear']);
+    Route::get(uri: 'stats', action: [TransactionController::class, 'getStatistics']);
 });
 
 

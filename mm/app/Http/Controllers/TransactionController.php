@@ -185,8 +185,21 @@ class TransactionController extends Controller
             ->whereDate('created_at', $date)
             ->get();
 
+        $totalTransactions = $transactions->count();
+
+        $totalExpense = $transactions->filter(function ($transaction) {
+            return in_array($transaction->type, ['expense', 'loan']);
+        })->sum('amount');
+
+        $totalIncome = $transactions->filter(function ($transaction) {
+            return in_array($transaction->type, ['income', 'borrow']);
+        })->sum('amount');
+
         return response()->json([
-            'transactions' => $transactions,
+            'total_transactions' => $totalTransactions,
+            'total_expense' => $totalExpense,
+            'total_income' => $totalIncome,
+            'transactions' => $transactions,            
         ], 200);
     }
 
@@ -210,7 +223,21 @@ class TransactionController extends Controller
             ->whereMonth('created_at', '=', date('m', strtotime($month)))
             ->get();
 
+            $totalTransactions = $transactions->count();
+
+            $totalExpense = $transactions->filter(function ($transaction) {
+                return in_array($transaction->type, ['expense', 'loan']);
+            })->sum('amount');
+    
+            $totalIncome = $transactions->filter(function ($transaction) {
+                return in_array($transaction->type, ['income', 'borrow']);
+            })->sum('amount');
+
+
         return response()->json([
+            'total_transactions' => $totalTransactions,
+            'total_expense' => $totalExpense,
+            'total_income' => $totalIncome,
             'transactions' => $transactions,
         ], 200);
     }
@@ -234,10 +261,59 @@ class TransactionController extends Controller
             ->whereYear('created_at', '=', $year)
             ->get();
 
+            $totalTransactions = $transactions->count();
+
+            $totalExpense = $transactions->filter(function ($transaction) {
+                return in_array($transaction->type, ['expense', 'loan']);
+            })->sum('amount');
+    
+            $totalIncome = $transactions->filter(function ($transaction) {
+                return in_array($transaction->type, ['income', 'borrow']);
+            })->sum('amount');
+
         return response()->json([
+            'total_transactions' => $totalTransactions,
+            'total_expense' => $totalExpense,
+            'total_income' => $totalIncome,
             'transactions' => $transactions,
         ], 200);
     }
+
+    public function getStatistics(){
+        $user_id = auth()->user()->id;
+
+        $transactions = Transaction::where('user_id', $user_id)->get();
+
+        $totalTransactions = $transactions->count();
+
+        $totalExpense = $transactions->filter(function ($transaction) {
+            return in_array($transaction->type, ['expense']);
+        })->sum('amount');
+
+        $totalIncome = $transactions->filter(function ($transaction) {
+            return in_array($transaction->type, ['income']);
+        })->sum('amount');
+
+        $totalLoan = $transactions->filter(function ($transaction) {
+            return in_array($transaction->type, ['loan']);
+        })->sum('amount');
+
+        $totalBorrow = $transactions->filter(function ($transaction) {
+            return in_array($transaction->type, ['borrow']);
+        })->sum('amount');
+
+        $curr_balance = $totalIncome - $totalExpense + $totalBorrow - $totalLoan;
+
+        return response()->json([
+            'total_transactions' => $totalTransactions,
+            'total_expense' => $totalExpense,
+            'total_income' => $totalIncome,
+            'total_loan' => $totalLoan,
+            'total_borrow' => $totalBorrow,
+            'current_balance' => $curr_balance,
+        ], 200);
+    }
+
 
 
 }
