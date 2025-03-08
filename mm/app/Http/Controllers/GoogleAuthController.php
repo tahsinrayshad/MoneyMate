@@ -15,27 +15,29 @@ class GoogleAuthController extends Controller
 
     public function callbackGoogle(){
         try{
-            $google_user = Socialite::driver('google')->user();
+            $google_user = Socialite::driver('google')->stateless()->user();
 
-            $user = User::where('google_id', $google_user->getId())->first();
+            $user = User::where('email', $google_user->getEmail())->first();
 
             if(!$user){
                 $new_user = User::create([
-                    'username' => $google_user->getName(),
-                    'email' => $google_user->getEmail(),
-                    'google_id' => $google_user->getId(),
+                    'username' => explode('@', $google_user->getEmail())[0],
                     'fullname' => $google_user->getName(),
+                    'email' => $google_user->getEmail(),
+                    'password' => "default",
                 ]);
 
-                Auth::login($new_user);
-
-                return redirect()->intended('dashboard');
-
+                $user = $new_user;
             }
-            else{
-                Auth::login($user);
-                return redirect()->intended('dashboard');
-            }
+
+            $token = auth()->login($user);
+
+            return response()->json(
+                [
+                    'access_token' => $token,
+                    'token_type' => 'bearer'
+                ]
+                );
         }
         catch(\Throwable $th){
             dd('Something went wrong! '. $th->getMessage());

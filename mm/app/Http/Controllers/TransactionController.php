@@ -150,8 +150,20 @@ class TransactionController extends Controller
             ], 404);
         }
 
+        $budget = null;
+        if ($transaction->budget_id) {
+            $budget = Budget::select('id', 'title', 'amount', 'description')->find($transaction->budget_id);
+        }
+
+        $to_user = null;
+        if ($transaction->to_user_id) {
+            $to_user = User::select('id', 'username', 'email')->find($transaction->to_user_id);
+        }
+
         return response()->json([
             'transaction' => $transaction,
+            'budget' => $budget,
+            'to_user' => $to_user,
         ], 200);
     }
 
