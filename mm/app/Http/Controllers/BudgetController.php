@@ -181,7 +181,12 @@ class BudgetController extends Controller
      */
     public function getSingleBudget($id)
     {
-        $budget = Budget::find($id);
+        $budget = Budget::with(['transactions' => function ($query) {
+                $query->select('id', 'budget_id', 'amount', 'description', 'created_at');
+            }])
+            ->withCount('transactions')
+            ->withSum('transactions', 'amount')
+            ->find($id);
 
         if (!$budget) {
             return response()->json([
@@ -194,6 +199,8 @@ class BudgetController extends Controller
                 'message' => 'Unauthorized action!',
             ], 401);
         }
+
+        $budget->remaining_balance = $budget->amount - $budget->transactions_sum_amount;
 
         return response()->json([
             'budget' => $budget
